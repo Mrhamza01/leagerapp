@@ -1,8 +1,8 @@
 import { Client, Account, Databases } from 'appwrite';
 
 const client = new Client()
-  .setEndpoint(process.env.appwriteURL as string)
-  .setProject(process.env.appwriteURL as string);
+  .setEndpoint(String(process.env.appwriteURL))
+  .setProject(String(process.env.appwriteURL));
 
 export const account = new Account(client);
 export const databases = new Databases(client);

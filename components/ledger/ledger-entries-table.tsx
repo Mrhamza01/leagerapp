@@ -43,39 +43,22 @@ export function LedgerEntriesTable() {
 
   const fetchEntries = async (searchTerm = '', username = '') => {
     try {
-      // const { ledgerEntries }:any = await retryOperation(() =>
-      //   graphqlClient.request(GET_LEDGER_ENTRIES, {
-      //     limit: 100,
-      //     offset: 0,
-      //     searchTerm,
-      //     username,
-      //   }),
-      // )
-      const ledgerEntries = databases.listDocuments(
+      const response = await databases.listDocuments(
         DATABASE_ID,
         LEDGER_COLLECTION_ID,
-        [Query.orderDesc('username')]
+        [Query.orderDesc('type')]
       );
-      ledgerEntries.then(
-        function (response) {
-          console.log(response);
-          const ledgerEntries: LedgerEntry[] = response.documents.map((doc: any) => ({
-            $id: doc.$id,
-            type: doc.type,
-            amount: doc.amount,
-            description: doc.description,
-            email: doc.email,
-            username: doc.username,
-          }));
-          setEntries(ledgerEntries);
-
-        },
-        function (error) {
-          console.log(error);
-        }
-      );
-
-      console.log(ledgerEntries);
+  
+      const ledgerEntries: LedgerEntry[] = response.documents.map((doc: any) => ({
+        $id: doc.$id,
+        type: doc.type,
+        amount: doc.amount,
+        description: doc.description,
+        email: doc.email,
+        username: doc.username,
+      }));
+  
+      setEntries(ledgerEntries);
     } catch (error) {
       console.error('Error fetching ledger entries:', error);
       toast({
@@ -85,6 +68,7 @@ export function LedgerEntriesTable() {
       });
     }
   };
+  
 
   useEffect(() => {
     fetchEntries();
